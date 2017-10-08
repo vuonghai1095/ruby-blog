@@ -1,0 +1,11 @@
+<h1> Index page for user</h1>
+<%= link_to 'New user', {:action => :new} %>
+<% @users.each do |u| %>
+<ul>
+  <li>User id:<%= u.id %></li>
+  <li>Username: <%= u.name %> </li>
+  <li>Email: <%= u.email %></li>
+  <li>Action:<%= link_to "Edit", edit_user_path(u) %>|<%= link_to "Delete", u,:confirm => "Are you sure?", :method => "delete"  %></li>
+</ul>
+<% end %>
+<%= link_to "Log out", logout_path, method: :delete %>

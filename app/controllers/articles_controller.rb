@@ -1,15 +1,17 @@
 class ArticlesController < ApplicationController
 
   before_action :set_article, only: [:edit, :update, :show, :destroy]
-
+  before_action :require_user, except: [:show, :index]
   def index
-    @articles = Article.all
-    render 'index'
+    #debugger
+    @articles = Article.paginate(page: params[:page], per_page: 2)
+    if @articles.empty?
+      flash[:notice] = "No record on page #{params[:page]}"
+    end
   end
 
   def show
       @article = Article.find(params[:id])
-      render 'show'
   end
   
   def new
@@ -25,6 +27,10 @@ class ArticlesController < ApplicationController
       render 'new'
     end
   end
+
+  def edit
+
+  end
   
   def update    
     if @article.update(article_params)
@@ -33,10 +39,6 @@ class ArticlesController < ApplicationController
     else
       render 'edit'
     end
-  end
-  
-  def edit
-
   end
   
   def destroy
@@ -50,7 +52,7 @@ class ArticlesController < ApplicationController
   
   private
   def article_params
-    params.require(:article).permit(:title, :description)
+    params.require(:article).permit(:title, :description, :user)
   end
 
   def set_article
